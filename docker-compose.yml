@@ -1,0 +1,52 @@
+version: "3.4"
+services:
+  vue-web:
+    image: ${docker_image}:${BUILD_NUMBER}
+    environment:
+      DOMAIN_NAME: vue-web
+    ports:
+     - 42019:80
+#    healthcheck:
+#      test: ["CMD", "curl", "-f", "http://localhost:8080"]
+#      interval: 40s
+#      timeout: 10s
+#      retries: 3
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+    deploy:
+      #启动的实例数
+      replicas: 1
+      #重启策略 非零退出才重启
+      restart_policy:
+        condition: on-failure
+      resources:
+        #限制使用百分之50CPU最大使用，1G最大内存使用
+        limits:
+          cpus: "0.8"
+          memory: 2048M
+        #保留百分之10CPU使用，256MB的内存给应用使用
+        reservations:
+          cpus: '0.1'
+          memory: 1024M
+      placement:
+        constraints:
+          - node.role == worker
+      update_config:
+        #并行更新容器的数量 一次一个
+        parallelism: 1
+        #如果更新失败就回滚到上一个版本
+        failure_action: rollback
+        #更新一个之后要延迟10秒钟更新下一个
+        delay: 10s
+        #先停止第一个再启动一个
+        order: stop-first
+    logging:
+      driver: fluentd
+      options:
+        tag: docker.{{.Name}}
+        fluentd-async-connect: "true"
+    networks:
+      - docker-net
+networks:
+  docker-net:
