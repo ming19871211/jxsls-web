@@ -5,7 +5,7 @@ services:
     environment:
       DOMAIN_NAME: vue-web
     ports:
-     - 42019:80
+     - 42069:80
 #    healthcheck:
 #      test: ["CMD", "curl", "-f", "http://localhost:8080"]
 #      interval: 40s
