@@ -26,10 +26,12 @@ pipeline {
                 sh 'npm -v'
                 sh 'node -v'
                 dir("${env.WORKSPACE}") {
+                  echo "安装cnpm"
+                  sh "npm install -g cnpm --registry=https://registry.npm.taobao.org"
                   echo "开始下载依赖包..."
-                  sh "npm install"
+                  sh "cnpm install"
                   echo "开始编译vue项目......"
-                  sh "npm run build:${params.profile}"
+                  sh "cnpm run build:${params.profile}"
                 }
             }
         }
