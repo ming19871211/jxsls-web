@@ -1,6 +1,6 @@
 # jxsls-web
 
-> 拓维教育-优班掌
+> 教育-优班掌
 
 ## Build Setup
 
